@@ -26,7 +26,7 @@ const createShowcase = async (req, res) => {
     const uploadPromises = files.map((file) =>
       new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: "4k_vision", use_filename: true, unique_filename: false },
+          { folder: "4k_vision", use_filename: true, unique_filename: true },
           (error, result) => {
             if (error) return reject(error);
             resolve(result.secure_url);
