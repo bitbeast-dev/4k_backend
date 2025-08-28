@@ -45,7 +45,7 @@ const createcustomer = async (req, res) => {
           {
             folder: "4k_vision",
             use_filename: true,
-            unique_filename: false,
+            unique_filename: true,
           },
           (error, result) => {
             if (result) resolve(result);
