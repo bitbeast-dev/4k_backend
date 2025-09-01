@@ -8,7 +8,7 @@ const getTeam = (req, res) => {
   const sql = "SELECT * FROM team ORDER BY created_at DESC";
   db.query(sql, (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json(result);
+    res.json(result.rows);
   });
 };
 
