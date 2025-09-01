@@ -5,7 +5,7 @@ import streamifier from "streamifier";
 
 // Get all 4k_values items
 const getValues = (req, res) => {
-  const sql = "SELECT * FROM 4k_values ORDER BY created_at DESC";
+  const sql = "SELECT * FROM 4k_values";
   db.query(sql, (err, result) => {
     if (err) {
       res.status(500).json({ error: err.message });

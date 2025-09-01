@@ -3,7 +3,7 @@ import db from "../config/db.js";
 
 // ✅ Get all internship items
 const getInternship = (req, res) => {
-    const sql = "SELECT * FROM internship ORDER BY created_at DESC";
+    const sql = "SELECT * FROM internship";
     db.query(sql, (err, result) => {
         if (err) {
             return res.status(500).json({ error: err.message });

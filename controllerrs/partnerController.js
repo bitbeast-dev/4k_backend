@@ -3,7 +3,7 @@ import db from "../config/db.js";
 
 // Get all home items
 const getPartner = (req, res) => {
-    const sql = "SELECT * FROM partner ORDER BY created_at DESC";
+    const sql = "SELECT * FROM partner";
     db.query(sql, (err, result) => {
         if (err) {
             res.status(500).json({ error: err.message });

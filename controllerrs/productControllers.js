@@ -3,17 +3,22 @@ import db from "../config/db.js";
 import cloudinary from "../cloudinary/cloud.js"; // your Cloudinary config
 import streamifier from "streamifier";
 
-// Get all products
+// -------------------- GET ALL PRODUCTS --------------------
 const getProducts = (req, res) => {
-  const sql = "SELECT * FROM products ORDER BY created_at DESC";
-  db.query(sql, (err, result) => {
+  const sql = "SELECT * FROM products";
+  db.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json(result);
+
+    res.json({
+      message: "Products fetched successfully",
+      count: results.length,
+      data: results,
+    });
   });
 };
 
-// Create new product (fully working with memory storage & Cloudinary)
- const createProducts = async (req, res) => {
+// -------------------- CREATE PRODUCTS --------------------
+const createProducts = async (req, res) => {
   try {
     const { description, price, features, style, quantity, category } = req.body;
     const files = req.files;
@@ -75,38 +80,60 @@ const getProducts = (req, res) => {
   }
 };
 
-// Update product
- const updateProducts = (req, res) => {
+// -------------------- UPDATE PRODUCT --------------------
+const updateProducts = (req, res) => {
   const { id } = req.params;
   const { description, price, category } = req.body;
-  const sql = "UPDATE products SET description = ?, price = ?, category = ? WHERE id = ?";
+  const sql =
+    "UPDATE products SET description = ?, price = ?, category = ? WHERE id = ?";
+
   db.query(sql, [description, price, category, id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
-    if (result.affectedRows === 0) return res.status(404).json({ error: "Record not found" });
-    res.json({ message: "Product updated successfully", id, description, price, category });
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ error: "Product not found" });
+
+    res.json({
+      message: "Product updated successfully",
+      data: { id, description, price, category },
+    });
   });
 };
 
-// Delete product
+// -------------------- DELETE PRODUCT --------------------
 const deleteProducts = (req, res) => {
   const { id } = req.params;
   const sql = "DELETE FROM products WHERE id = ?";
+
   db.query(sql, [id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
-    if (result.affectedRows === 0) return res.status(404).json({ error: "Record not found" });
-    res.json({ message: "Product successfully deleted" });
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ error: "Product not found" });
+
+    res.json({
+      message: "Product deleted successfully",
+      deletedId: id,
+    });
   });
 };
 
-// Truncate products
- const truncateProducts = (req, res) => {
+// -------------------- TRUNCATE PRODUCTS --------------------
+const truncateProducts = (req, res) => {
   const sql = "TRUNCATE TABLE products";
   db.query(sql, (err) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json({ message: "All products successfully deleted" });
+
+    res.json({
+      message: "All products deleted successfully",
+    });
   });
 };
 
-
-
-export { getProducts, createProducts, updateProducts, deleteProducts ,truncateProducts};
+export {
+  getProducts,
+  createProducts,
+  updateProducts,
+  deleteProducts,
+  truncateProducts,
+};

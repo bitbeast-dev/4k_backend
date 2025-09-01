@@ -4,7 +4,7 @@
 
 // dotenv.config();
 
-var fullURL = "postgresql://honore:kTZqXYRr6MB0mMxDiaz4oPWsm9EAaAtT@dpg-d2pj5un5r7bs739per1g-a.oregon-postgres.render.com/full_database";
+
 
 // const db = mysql2.createConnection({
 //     host: process.env.DB_HOST,
@@ -25,48 +25,29 @@ var fullURL = "postgresql://honore:kTZqXYRr6MB0mMxDiaz4oPWsm9EAaAtT@dpg-d2pj5un5
 // export default db;
 
 
-
 import pkg from "pg";
 import chalk from "chalk";
 import dotenv from "dotenv";
+var fullURL = "postgresql://honore:kTZqXYRr6MB0mMxDiaz4oPWsm9EAaAtT@dpg-d2pj5un5r7bs739per1g-a.oregon-postgres.render.com/full_database";
+
+import { applyHardcodedSchema } from "./schema.js"; // ← use this
 
 dotenv.config();
-
 const { Client } = pkg;
 
-// Use DATABASE_URL from .env (full Postgres connection string)
 const db = new Client({
   connectionString: fullURL,
-  ssl: {
-    rejectUnauthorized: false, // needed for many cloud providers (like Heroku, Render, Supabase, Neon)
-  },
+  ssl: { rejectUnauthorized: false },
 });
 
-// Connect to PostgreSQL
 db.connect()
-  .then(() => {
-const { Client } = pkg;
-
-// Use DATABASE_URL from .env (full Postgres connection string)
-const db = new Client({
-  connectionString: fullURL,
-  ssl: {
-    rejectUnauthorized: false, // needed for many cloud providers (like Heroku, Render, Supabase, Neon)
-  },
-});
-
-// Connect to PostgreSQL
-db.connect()
-  .then(() => {
+  .then(async () => {
     console.log(chalk.yellow("Database successfully connected!"));
-  })
-  .catch((err) => {
-    console.error(chalk.red("Database connection failed: " + err.message));
-  });
+    await applyHardcodedSchema(db); // ← creates all tables if missing
+    console.log(chalk.green("Schema applied."));
   })
   .catch((err) => {
     console.error(chalk.red("Database connection failed: " + err.message));
   });
 
 export default db;
- 

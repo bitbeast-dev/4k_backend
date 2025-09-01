@@ -5,7 +5,7 @@ import streamifier from "streamifier";
 
 // Get all mission items
 const getMission = (req, res) => {
-  const sql = "SELECT * FROM mission ORDER BY created_at DESC";
+  const sql = "SELECT * FROM mission";
   db.query(sql, (err, result) => {
     if (err) {
       res.status(500).json({ error: err.message });

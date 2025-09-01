@@ -5,7 +5,7 @@ import streamifier from "streamifier";
 
 // Get all showcase items
 const getShowcase = (req, res) => {
-  const sql = "SELECT * FROM showcase ORDER BY created_at DESC";
+  const sql = "SELECT * FROM showcase";
   db.query(sql, (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(result);
