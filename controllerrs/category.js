@@ -14,17 +14,33 @@ const getCategory = (req, res) => {
 };
 
 // Create new home item
+// const createCategory = (req, res) => {
+//   const { category } = req.body;
+//   const sql = "INSERT INTO category (id) VALUES (?)";
+//   db.query(sql, [category], (err, result) => {
+//     if (err) {
+//       console.error("MySQL insert error:", err);
+//       return res.status(500).json({ error: err.message });
+//     }
+//     res.status(201).json({
+//       message: "Category Inserted successfully",
+//       insertedRows: result.affectedRows,
+//     });
+//   });
+// };
+
 const createCategory = (req, res) => {
-  const { category } = req.body;
-  const sql = "INSERT INTO category (id) VALUES (?)";
-  db.query(sql, [category], (err, result) => {
+  const { id, cat } = req.body; // Example: send both "id" and "cat"
+  const sql = "INSERT INTO category (id, cat) VALUES ($1, $2) RETURNING *"; // <-- PostgreSQL uses $1, $2
+
+  db.query(sql, [id, cat], (err, result) => {
     if (err) {
-      console.error("MySQL insert error:", err);
+      console.error("PostgreSQL insert error:", err);
       return res.status(500).json({ error: err.message });
     }
     res.status(201).json({
-      message: "Category Inserted successfully",
-      insertedRows: result.affectedRows,
+      message: "Category inserted successfully",
+      insertedRow: result.rows[0], // <-- PostgreSQL gives rows, not affectedRows
     });
   });
 };
