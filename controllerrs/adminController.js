@@ -116,9 +116,9 @@ const unlockAdmin = (req, res) => {
   const findSql = "SELECT * FROM admin WHERE email = ?";
   db.query(findSql, [email], async (err, results) => {
     if (err) return res.status(500).json({ message: "Server error" });
-    if (results.length === 0) return res.status(404).json({ message: "Admin not found" });
+    if (results.rows.length === 0) return res.status(404).json({ message: "Admin not found" });
 
-    const admin = results[0];
+    const admin = results.rows[0];
 
     // Step 2: Compare password
     const match = await bcrypt.compare(password, admin.password);
@@ -128,7 +128,7 @@ const unlockAdmin = (req, res) => {
     const unlockSql = "UPDATE admin SET locked = 0 WHERE email = ?";
     db.query(unlockSql, [email], (err2, result) => {
       if (err2) return res.status(500).json({ message: "Server error" });
-      res.status(200).json({ message: "Account unlocked successfully", data: result });
+      res.status(200).json({ message: "Account unlocked successfully", data: result.rows });
     });
   });
 };
